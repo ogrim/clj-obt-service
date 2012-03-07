@@ -1,6 +1,6 @@
 # clj-obt-service
 
-Since clj-obt only support the Oslo-Bergen-Tagger on the Linux platform, this is a simple web service to expose the functionality through text or json calls. Access to a functional installation of the Oslo-Bergen-Tagger is a requirement, follow the directions to install it from here: <https://github.com/noklesta/The-Oslo-Bergen-Tagger>
+Since [clj-obt](https://github.com/ogrim/clj-obt) only support [the Oslo-Bergen-Tagger](https://github.com/noklesta/The-Oslo-Bergen-Tagger) on the Linux platform, this is a simple web service to expose the functionality through text or json calls. Access to a functional installation of the Oslo-Bergen-Tagger is a requirement, follow the directions to install it from here: <https://github.com/noklesta/The-Oslo-Bergen-Tagger>
 
 
 ## Setup
