@@ -8,23 +8,27 @@
   (:gen-class :main true))
 
 (defn page [req]
-  (response "Tag plain text or json by using /text/?data= or /json/?data="))
+  (response "Tag text and specify format with /text/?data= or /json/?data="))
+
+(defn probably-vector? [data]
+  (if (and (= (first data) \[) (= (last data) \]))
+    true false))
+
+(defn tag [req]
+  (let [data (get-in req [:query-params "data"])
+        v? (probably-vector? data)
+        params (if v? (read-string data) data)
+        tagged (obt/obt-tag params)]
+    (if v? (str \[ (apply str tagged) \]) (str tagged))))
 
 (defn tag-json [req]
-  (-> req
-    (get-in [:query-params "data"])
-    json/decode
-    read-string
-    obt/obt-tag
-    json/encode
-    response
-    (ring.util.response/content-type "application/json")))
+  (-> (tag req)
+      json/encode
+      response
+      (content-type "application/json")))
 
 (defn tag-text [req]
-  (-> req
-      (get-in [:query-params "data"])
-      obt/obt-tag
-      str
+  (-> (tag req)
       response))
 
 (def routes
