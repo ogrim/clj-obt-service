@@ -17,29 +17,40 @@ You will of course supply your own port number and path to the Oslo-Bergen-Tagge
 
 ## Usage
 
-Tag text by sending POST with data parameter to either /text or /json
+Tag text by sending POST requests with data parameter to either /text or /json.
 
 	http://localhost:8085/text/
-
-        data=Dette skal tagges.
-
-
 	http://localhost:8085/json/
 
-        data=Dette skal tagges.
+You can tag either one string, or multiple strings at once. Tagging multiple strings can sometimes help speed up the tagging process.
 
+    "Dette må tagges"
+    "[\"Dette må tagges\" \"Dette skal også tagges!\"]"
 
-Tagging of multiple texts at once is also supported. This can sometimes help speed up the tagging process.
+An example of calling the service using `clj-http`, first URL-encode the data:
 
-	http://localhost:8085/text/
+    (clj-http.util/url-encode "Dette må tagges")
 
-        data=["Tag denne teksten." "Dette skal og tagges."]
+    =>
 
+    "Dette+m%C3%A5+tagges"
 
-	http://localhost:8085/json/
+Send POST request to service:
 
-        data=["Tag denne teksten." "Dette skal og tagges."]
+    (clj-http.client/post "http://localhost:8085/text"
+        {:body "data=Dette+m%C3%A5+tagges"
+         :content-type "application/x-www-form-urlencoded"
+         :as "ISO-8859-1"})
 
+     =>
+
+     {:trace-redirects ["http://localhost:8085/text"], :status 200,
+      :headers {"date" "Tue, 13 Mar 2012 12:25:37 GMT", "connection" "close",
+      "server" "Jetty(6.1.25)"},
+      :body "[{:tags [\"pron\" \"nøyt\" \"ent\" \"pers\" \"3\"], :lemma \"dette\",
+        :word \"Dette\", :i 1} {:tags [\"verb\" \"pres\" \"tr6\" \"pa4/til\" \"<aux1/infinitiv>\"],
+        :lemma \"måtte\", :word \"må\", :i 2} {:tags [\"verb\" \"pres\" \"inf\" \"pass\" \"tr1\" \"<<<\"],
+        :lemma \"tagge\", :word \"tagges\", :i 3}]"}
 
 
 ## License
