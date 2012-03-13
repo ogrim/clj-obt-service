@@ -7,15 +7,12 @@
             [cheshire.core :as json])
   (:gen-class :main true))
 
-(defn page [req]
-  (response "Tag text and specify format with /text/?data= or /json/?data="))
-
 (defn probably-vector? [data]
   (if (and (= (first data) \[) (= (last data) \]))
     true false))
 
 (defn tag [req]
-  (let [data (get-in req [:query-params "data"])
+  (let [data ((-> req :form-params) "data")
         v? (probably-vector? data)
         params (if v? (read-string data) data)
         tagged (obt/obt-tag params)]
@@ -33,9 +30,9 @@
 
 (def routes
   (app
-   ["" &] (wrap-params page)
-   ["text" &] (wrap-params tag-text)
-   ["json" &] (wrap-params tag-json)))
+   ["" &] (response "Tag text by POST the parameter data to /text or /json")
+   ["text" &] {:post (wrap-params tag-text)}
+   ["json" &] {:post (wrap-params tag-json)}))
 
 (defn -main [& args]
   (do (obt/set-obt-path! (second args))
