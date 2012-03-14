@@ -31,26 +31,22 @@ An example of calling the service using `clj-http`, first URL-encode the data:
 
     (clj-http.util/url-encode "Dette må tagges")
 
-    =>
+    => "Dette+m%C3%A5+tagges"
 
-    "Dette+m%C3%A5+tagges"
-
-Send POST request to service:
+The content-type of the request is `application/x-www-form-urlencoded` and encoding is `"ISO-8859-1`, noticable if you are tagging Norwegian characters. Send POST request to service:
 
     (clj-http.client/post "http://localhost:8085/text"
         {:body "data=Dette+m%C3%A5+tagges"
          :content-type "application/x-www-form-urlencoded"
          :as "ISO-8859-1"})
 
-     =>
-
-     {:trace-redirects ["http://localhost:8085/text"], :status 200,
-      :headers {"date" "Tue, 13 Mar 2012 12:25:37 GMT", "connection" "close",
-      "server" "Jetty(6.1.25)"},
-      :body "[{:tags [\"pron\" \"nøyt\" \"ent\" \"pers\" \"3\"], :lemma \"dette\",
-        :word \"Dette\", :i 1} {:tags [\"verb\" \"pres\" \"tr6\" \"pa4/til\" \"<aux1/infinitiv>\"],
-        :lemma \"måtte\", :word \"må\", :i 2} {:tags [\"verb\" \"pres\" \"inf\" \"pass\" \"tr1\" \"<<<\"],
-        :lemma \"tagge\", :word \"tagges\", :i 3}]"}
+     => {:trace-redirects ["http://localhost:8085/text"], :status 200,
+         :headers {"date" "Tue, 13 Mar 2012 12:25:37 GMT", "connection" "close",
+         "server" "Jetty(6.1.25)"},
+         :body "[{:tags [\"pron\" \"nøyt\" \"ent\" \"pers\" \"3\"], :lemma \"dette\",
+           :word \"Dette\", :i 1} {:tags [\"verb\" \"pres\" \"tr6\" \"pa4/til\" \"<aux1/infinitiv>\"],
+           :lemma \"måtte\", :word \"må\", :i 2} {:tags [\"verb\" \"pres\" \"inf\" \"pass\" \"tr1\" \"<<<\"],
+           :lemma \"tagge\", :word \"tagges\", :i 3}]"}
 
 
 ## License
